@@ -1,0 +1,140 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="DatabaseFirstDemoModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Classes">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="smallint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ClassName" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="ClassDuration" Type="smallint" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Trainers">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="varchar" MaxLength="500" Nullable="false" />
+          <Property Name="Length" Type="smallint" Nullable="false" />
+          <Property Name="Weight" Type="smallint" Nullable="false" />
+          <Property Name="Classid" Type="smallint" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_Trainers_Classes">
+          <End Role="Classes" Type="Self.Classes" Multiplicity="1" />
+          <End Role="Trainers" Type="Self.Trainers" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Classes">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Trainers">
+              <PropertyRef Name="Classid" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="DatabaseFirstDemoModelStoreContainer">
+          <EntitySet Name="Classes" EntityType="Self.Classes" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Trainers" EntityType="Self.Trainers" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_Trainers_Classes" Association="Self.FK_Trainers_Classes">
+            <End Role="Classes" EntitySet="Classes" />
+            <End Role="Trainers" EntitySet="Trainers" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="DatabaseFirstDemoModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Class">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int16" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ClassName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="ClassDuration" Type="Int16" Nullable="false" />
+          <NavigationProperty Name="Trainers" Relationship="Self.FK_Trainers_Classes" FromRole="Classes" ToRole="Trainers" />
+        </EntityType>
+        <EntityType Name="Trainer">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="500" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Length" Type="Int16" Nullable="false" />
+          <Property Name="Weight" Type="Int16" Nullable="false" />
+          <Property Name="Classid" Type="Int16" Nullable="false" />
+          <NavigationProperty Name="Class" Relationship="Self.FK_Trainers_Classes" FromRole="Trainers" ToRole="Classes" />
+        </EntityType>
+        <Association Name="FK_Trainers_Classes">
+          <End Role="Classes" Type="Self.Class" Multiplicity="1" />
+          <End Role="Trainers" Type="Self.Trainer" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Classes">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Trainers">
+              <PropertyRef Name="Classid" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="TrainerDBContext" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Classes" EntityType="Self.Class" />
+          <EntitySet Name="Trainers" EntityType="Self.Trainer" />
+          <AssociationSet Name="FK_Trainers_Classes" Association="Self.FK_Trainers_Classes">
+            <End Role="Classes" EntitySet="Classes" />
+            <End Role="Trainers" EntitySet="Trainers" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="DatabaseFirstDemoModelStoreContainer" CdmEntityContainer="TrainerDBContext">
+          <EntitySetMapping Name="Classes">
+            <EntityTypeMapping TypeName="DatabaseFirstDemoModel.Class">
+              <MappingFragment StoreEntitySet="Classes">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="ClassName" ColumnName="ClassName" />
+                <ScalarProperty Name="ClassDuration" ColumnName="ClassDuration" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Trainers">
+            <EntityTypeMapping TypeName="DatabaseFirstDemoModel.Trainer">
+              <MappingFragment StoreEntitySet="Trainers">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Length" ColumnName="Length" />
+                <ScalarProperty Name="Weight" ColumnName="Weight" />
+                <ScalarProperty Name="Classid" ColumnName="Classid" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
